@@ -10,11 +10,7 @@ Desenvolvido inteiramente em ambiente mobile e portado para Python nativo, o pro
 * **Conectividade Small Web:** Suporte nativo via sockets e TLS aos protocolos independentes **Gemini** (`gemini://`) e **Gopher** (`gopher://`).
 * **Soberania e Privacidade:** Sem caixas-pretas ou telemetria. Construído apenas sobre bibliotecas padrão da linguagem Python (`socket`, `ssl`, `tkinter`).
 
-## 🛠️ Como rodar
-Certifique-se de possuir o Python 3 e a biblioteca Pillow instalados no seu ambiente:
-```bash
-pip install Pillow
-python browser98.py
+
 
 
 
@@ -336,4 +332,13 @@ Contribuições, testes, sugestões e relatos de problemas são bem-vindos.
 Repositório oficial:
 
 https://github.com/ivogeme/Release-oficial-do-Browser-98-Vers-o-Est-vel
+
+​"Nota: Para rodar no Windows 98 nativo, é necessário utilizar uma camada de compatibilidade como o KernelEx para suporte ao Python 3, ou portar as chamadas de biblioteca para o Python 2.7.
+
+
+🛠️ Como rodar
+Certifique-se de possuir o Python 3 e a biblioteca Pillow instalados no seu ambiente:
+```bash
+pip install Pillow
+python browser98.py
 
