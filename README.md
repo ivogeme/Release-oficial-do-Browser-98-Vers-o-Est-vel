@@ -16,6 +16,16 @@ Certifique-se de possuir o Python 3 e a biblioteca Pillow instalados no seu ambi
 pip install Pillow
 python browser98.py
 
+
+
+
+
+
+
+
+
+
+
 Browser 98
 
 Um navegador leve e minimalista voltado para a Small Web, preservação digital, protocolos alternativos e navegação em computadores com recursos limitados.
