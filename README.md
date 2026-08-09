@@ -586,7 +586,8 @@ Uma experiência de navegação inspirada no passado, construída com ferramenta
 
 HTTP • HTTPS • Gemini • Gopher
 
-GPLv3Gemini • Gopher
+GPLv3 
+mini • Gopher
 
 GPLv3mini • Gopher
 
