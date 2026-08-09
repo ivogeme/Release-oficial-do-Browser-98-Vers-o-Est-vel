@@ -188,29 +188,29 @@ O objetivo atual é oferecer suporte a páginas simples, páginas antigas e cont
 
 O navegador possui suporte básico a elementos como:
 
-<h1> até <h6>
-<p>
-<br>
-<b>
-<strong>
-<i>
-<em>
-<u>
-<tt>
-<pre>
-<blockquote>
-<ul>
-<ol>
-<li>
-<table>
-<tr>
-<td>
-<a>
-<img>
-<font>
-<center>
-<hr>
-<marquee>
+<h1 até <h6
+<p
+<br
+<b
+<strong
+<i
+<em
+<u
+<tt
+<pre
+<blockquote
+<ul
+<ol
+<li
+<table
+<tr
+<td
+<a
+<img
+<font
+<center
+<hr
+<marquee
 
 Também existe suporte experimental para algumas propriedades "style", principalmente relacionadas a cores.
 
@@ -585,5 +585,7 @@ Browser 98
 Uma experiência de navegação inspirada no passado, construída com ferramentas do presente.
 
 HTTP • HTTPS • Gemini • Gopher
+
+GPLv3Gemini • Gopher
 
 GPLv3
