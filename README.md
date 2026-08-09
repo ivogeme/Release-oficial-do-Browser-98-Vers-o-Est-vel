@@ -209,12 +209,12 @@ O navegador possui suporte básico a elementos como:
 <img
 <font
 <center
-<hr
+hr
 marquee
 
 Também existe suporte experimental para algumas propriedades "style principalmente relacionadas a cores.
 
----
+
 
 Imagens
 
@@ -588,4 +588,4 @@ HTTP • HTTPS • Gemini • Gopher
 
 GPLv3Gemini • Gopher
 
-GPLv3Lv3
+GPLv3PLv3Lv3
