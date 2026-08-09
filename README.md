@@ -188,27 +188,27 @@ O objetivo atual é oferecer suporte a páginas simples, páginas antigas e cont
 
 O navegador possui suporte básico a elementos como:
 
-<h1 até <h6
-<p
-<br
-<b
-<strong
-<i
-<em
-<u
-<tt
-<pre
-<blockquote
-<ul
-<ol
-<li
-<table
-<tr
-<td
-<a
-<img
-<font
-<center
+h1 até h6
+p
+br
+b
+strong
+i
+em
+u
+tt
+pre
+blockquote
+ul
+ol
+li
+table
+tr
+td
+a
+img
+font
+center
 hr
 marquee
 
@@ -587,5 +587,7 @@ Uma experiência de navegação inspirada no passado, construída com ferramenta
 HTTP • HTTPS • Gemini • Gopher
 
 GPLv3Gemini • Gopher
+
+GPLv3mini • Gopher
 
 GPLv3PLv3Lv3
