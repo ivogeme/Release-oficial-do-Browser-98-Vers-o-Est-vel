@@ -210,9 +210,9 @@ O navegador possui suporte básico a elementos como:
 <font
 <center
 <hr
-<marquee
+marquee
 
-Também existe suporte experimental para algumas propriedades "style", principalmente relacionadas a cores.
+Também existe suporte experimental para algumas propriedades "style principalmente relacionadas a cores.
 
 ---
 
@@ -588,4 +588,4 @@ HTTP • HTTPS • Gemini • Gopher
 
 GPLv3Gemini • Gopher
 
-GPLv3
+GPLv3Lv3
