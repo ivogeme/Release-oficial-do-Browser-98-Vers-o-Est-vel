@@ -1,293 +1,392 @@
-# Browser 98
+Browser 98 v1.2 — Especificação de desenvolvimento
 
-O **Browser 98** é um navegador multiprotocolo ultra-leve projetado para rodar em hardware legado (como sistemas rodando Windows 95/98/ME) e fornecer uma experiência de navegação rápida, segura e totalmente livre de scripts invasivos na era moderna.
+Modifique o código atual do Browser 98 mantendo sua arquitetura em Python/Tkinter e preserve os recursos que já funcionam. Não reescreva o projeto inteiro. A versão 1.2 deve ser uma evolução incremental da versão 1.1.
 
-Desenvolvido inteiramente em ambiente mobile e portado para Python nativo, o projeto nasceu em 2021 ao perceber a morte programada da retrocompatibilidade na Web comercial comandada pelo HTTP moderno e motores pesados de JavaScript.
+1. Corrigir a arquitetura de cache
 
-## 🌟 Funcionalidades
-* **Anti-Rastreamento Nativo:** Totalmente imune a scripts e rastreadores comerciais por não carregar motores JavaScript ou CSS complexos.
-* **Preservação Histórica:** Suporte completo para HTML Clássico (HTML 1.0, 2.0 e 3.2 com renderização de tags históricas como `<center>` e tabelas básicas).
-* **Conectividade Small Web:** Suporte nativo via sockets e TLS aos protocolos independentes **Gemini** (`gemini://`) e **Gopher** (`gopher://`).
-* **Soberania e Privacidade:** Sem caixas-pretas ou telemetria. Construído apenas sobre bibliotecas padrão da linguagem Python (`socket`, `ssl`, `tkinter`).
+Melhore o sistema atual de "page_cache".
 
+- Corrija o cálculo de "current_cache_size".
+- Garanta que páginas removidas do cache realmente diminuam o contador.
+- Evite que o cache ultrapasse o limite configurado.
+- Não deixe imagens e páginas ocuparem o mesmo sistema de cache sem controle.
+- Adicione uma função para limpar todo o cache.
+- Adicione uma opção para recarregar a página ignorando o cache.
+- Mantenha o limite padrão de 200 MB.
+- Não implemente ainda cache persistente em disco.
 
+2. Melhorar o histórico
 
+O histórico atual está somente na memória.
 
+Adicionar:
 
+- salvamento do histórico em um arquivo local;
+- carregamento do histórico quando o navegador iniciar;
+- opção "Limpar histórico";
+- evitar registrar repetidamente a mesma URL durante Voltar/Avançar;
+- manter o funcionamento atual dos botões Voltar e Avançar.
 
+Use um arquivo simples, como "historico.txt", para manter a solução leve.
 
+3. Melhorar os favoritos
 
+Manter o sistema atual baseado em arquivo, mas adicionar:
 
+- remover favorito;
+- editar favorito;
+- evitar favoritos duplicados;
+- opção para exportar favoritos;
+- opção para importar favoritos.
 
+Não implementar ainda pastas complexas de favoritos.
 
+4. Melhorar downloads
 
+Modificar "download_file()" para não carregar o arquivo inteiro na RAM.
 
-Browser 98
+Usar leitura em blocos:
 
-Um navegador leve e minimalista voltado para a Small Web, preservação digital, protocolos alternativos e navegação em computadores com recursos limitados.
+- abrir a conexão;
+- ler pequenos blocos de dados;
+- gravar os blocos diretamente no arquivo;
+- mostrar progresso;
+- mostrar quantidade baixada;
+- mostrar tamanho total quando o servidor fornecer "Content-Length";
+- calcular velocidade aproximada;
+- permitir cancelar o download.
 
-"Status" (https://img.shields.io/badge/status-beta-yellow)
-"Version" (https://img.shields.io/badge/version-1.1-blue)
-"License" (https://img.shields.io/badge/license-GPLv3-blue)
+Não implementar ainda pausa/retomada de downloads.
 
-🌐 Sobre o projeto
+5. Melhorar o carregamento das páginas
 
-O Browser 98 é um projeto de navegador desenvolvido com o objetivo de oferecer uma experiência de navegação simples, leve e acessível, evitando a complexidade e o peso dos navegadores modernos.
+Adicionar controle básico de carregamento:
 
-O projeto busca explorar uma abordagem diferente da navegação na Internet, combinando suporte à Web tradicional com protocolos alternativos e descentralizados da chamada Small Web.
+- botão "Parar";
+- indicador de carregamento;
+- atualização da barra de status;
+- mensagens como:
+  - "Conectando...";
+  - "Baixando...";
+  - "Processando...";
+  - "Concluído";
+  - "Erro".
 
-Atualmente, o Browser 98 possui suporte nativo aos seguintes protocolos:
+Evitar que operações de rede bloqueiem a interface gráfica.
 
-- HTTP
-- HTTPS
-- Gemini
-- Gopher
+6. Melhorar o parser HTML
 
-O navegador também possui suporte a recursos básicos de navegação, como histórico, favoritos, cache, downloads e carregamento de imagens.
+Continuar usando "HTMLParser".
 
----
+Adicionar suporte melhor para:
 
-🕰️ História do projeto
+- "<title>";
+- "<base>";
+- "<meta charset>";
+- "<font size>";
+- "<font face>";
+- tabelas;
+- células de tabela;
+- "colspan";
+- "rowspan";
+- formulários simples.
 
-O desenvolvimento do Browser 98 começou em 2021.
+Implementar inicialmente apenas:
 
-Desde o início, o projeto passou por diversas versões, recriações, experimentos e mudanças de arquitetura. Algumas versões foram simplificadas ou tiveram recursos removidos durante o processo de desenvolvimento.
+- "<input type="text">";
+- "<input type="submit">";
+- "<textarea>";
+- "<select>";
+- "<option>";
+- "<button>".
 
-Em 2024, uma versão do Browser 98 chegou a ser integrada ao projeto NewXP, um projeto desenvolvido em colaboração com um colega, baseado no Windows XP e com uma interface inspirada no Windows 10.
+Não tentar implementar JavaScript.
 
-O projeto NewXP foi posteriormente descontinuado e não está mais disponível para download. Apesar disso, esse período faz parte da história do desenvolvimento do Browser 98.
+O navegador continuará sendo deliberadamente um navegador HTML leve e retrô.
 
-Após diferentes fases de desenvolvimento e recriação, o Browser 98 voltou a ser desenvolvido como um projeto independente, evoluindo gradualmente até a atual versão 1.1.
+7. Melhorar imagens
 
-A versão atual representa uma nova etapa do projeto, com melhorias na navegação, gerenciamento de cache, carregamento assíncrono de imagens, downloads, favoritos e suporte ampliado aos protocolos Gemini e Gopher.
+Manter o carregamento assíncrono existente.
 
----
+Adicionar:
 
-🎯 Filosofia
+- tratamento correto de erros;
+- suporte a mais formatos reconhecidos pelo Pillow;
+- opção para salvar imagem;
+- opção para abrir a imagem em uma janela separada;
+- evitar carregar a mesma imagem várias vezes;
+- limitar o tamanho máximo das imagens carregadas.
 
-O Browser 98 parte de uma ideia simples:
+Corrigir possíveis problemas de referência de "PhotoImage" para impedir que imagens desapareçam.
 
-«A Internet não precisa ser pesada para ser útil.»
+8. Melhorar Gemini
 
-A Web moderna evoluiu rapidamente, mas muitos computadores antigos e sistemas com poucos recursos ficaram para trás.
+Manter o suporte atual ao Gemini.
 
-O projeto busca explorar uma alternativa baseada em:
+Adicionar:
 
-- simplicidade;
-- baixo consumo de recursos;
-- protocolos abertos;
-- preservação digital;
-- compatibilidade com ambientes limitados;
-- Small Web;
-- independência de grandes motores de renderização.
+- melhor interpretação dos códigos de status;
+- suporte mais correto a URLs relativas;
+- suporte a links Gemini com query;
+- tratamento de respostas inválidas;
+- limite de redirecionamentos para evitar loops;
+- mostrar o status Gemini na barra de status;
+- opção de compatibilidade quando o certificado TLS não puder ser validado.
 
-O objetivo não é competir diretamente com navegadores modernos como Chrome, Firefox ou Edge.
+TLS
 
-O objetivo é oferecer uma experiência diferente, voltada para navegação simples, conteúdo leve e protocolos alternativos.
+Não remover a possibilidade de acessar servidores Gemini antigos ou com certificados problemáticos.
 
----
+Porém:
 
-✨ Recursos atuais
+- manter a verificação TLS como comportamento padrão sempre que possível;
+- quando a validação falhar, informar claramente o problema;
+- oferecer uma opção de compatibilidade para permitir conexão sem validação;
+- deixar explícito na interface quando a conexão estiver usando TLS sem validação.
 
-Navegação
+Não simplesmente desativar a segurança silenciosamente.
 
-- [x] HTTP
-- [x] HTTPS
-- [x] Gemini
-- [x] Gopher
-- [x] Histórico de navegação
-- [x] Voltar e avançar
-- [x] Página inicial
-- [x] Atualização de páginas
-- [x] Barra de endereço
+9. Melhorar Gopher
 
-HTML
+Manter o suporte atual e adicionar os tipos básicos que ainda faltam.
 
-O navegador possui um renderizador HTML básico próprio, com suporte a diversos elementos de HTML clássico, incluindo:
+Priorizar:
 
-- títulos;
-- parágrafos;
-- links;
-- imagens;
-- listas;
-- texto em negrito;
-- itálico;
-- sublinhado;
-- texto monoespaçado;
-- blocos de citação;
-- texto pré-formatado;
-- tabelas básicas;
-- cores de fonte;
-- elementos de alinhamento.
-
-O Browser 98 não pretende ser um navegador compatível com toda a Web moderna. Páginas que dependem fortemente de JavaScript, CSS moderno ou frameworks complexos podem não funcionar corretamente.
-
----
-
-🌌 Gemini
-
-O Browser 98 possui suporte nativo ao protocolo Gemini.
-
-Recursos atualmente implementados incluem:
-
-- conexão TLS;
-- páginas Gemini;
-- links;
-- títulos;
-- listas;
-- citações;
-- texto pré-formatado;
-- respostas de entrada do usuário;
-- redirecionamentos;
-- cache;
-- pesquisa em servidores compatíveis.
-
-O modo de conexão TLS utilizado atualmente prioriza a compatibilidade com servidores Gemini que utilizam certificados que não podem ser validados pelo modelo tradicional de autoridades certificadoras.
-
----
-
-🕳️ Gopher
-
-O navegador também possui suporte ao protocolo Gopher.
-
-Atualmente são reconhecidos:
-
-- arquivos de texto;
+- texto;
 - diretórios;
-- mecanismos de busca Gopher.
+- buscas;
+- arquivos;
+- imagens;
+- tratamento de erros.
 
-O suporte ao protocolo Gopher continuará sendo expandido em versões futuras.
+Não tentar transformar Gopher em um navegador moderno.
 
----
+10. Adicionar "file://"
 
-📥 Downloads
+Implementar suporte para abrir arquivos HTML locais.
 
-O Browser 98 possui um sistema básico de downloads.
+Exemplos:
 
-Determinados links de arquivos são identificados automaticamente e podem ser salvos no computador por meio de uma janela de seleção de arquivo.
+"file:///C:/pagina.html"
 
-Entre os formatos atualmente identificados estão:
+ou arquivos locais equivalentes no Linux/macOS.
 
-- ZIP
-- EXE
-- MP3
-- PDF
-- TAR.GZ
+O navegador deve:
 
----
+- abrir HTML local;
+- resolver imagens relativas;
+- resolver links relativos;
+- impedir acesso acidental a recursos fora do contexto quando isso representar risco.
 
-💾 Cache
+11. Melhorar a interface
 
-O navegador possui um sistema de cache em memória para páginas acessadas.
+Manter a interface Tkinter atual.
 
-O tamanho máximo configurado atualmente é de aproximadamente 200 MB para o cache de páginas.
+Adicionar:
 
-O sistema possui gerenciamento automático para evitar que o cache ultrapasse o limite configurado.
+- botão Parar;
+- indicador simples de carregamento;
+- menu "Configurações";
+- opção de modo escuro;
+- controle do tamanho da fonte;
+- zoom simples do conteúdo;
+- tela cheia com F11.
 
----
+Não adicionar ainda sistema complexo de temas.
 
-🖼️ Carregamento de imagens
+Como primeira versão de temas, disponibilizar apenas:
 
-As imagens são carregadas de forma assíncrona, permitindo que a interface continue respondendo enquanto o conteúdo é baixado.
+- Clássico;
+- Escuro;
+- Windows 98.
 
-As imagens também possuem um cache próprio para evitar downloads desnecessários durante a sessão.
+12. Atalhos de teclado básicos
 
----
+Adicionar:
 
-⭐ Favoritos
+- Ctrl+L → selecionar barra de endereço;
+- Ctrl+R → recarregar;
+- Ctrl+Shift+R → recarregar ignorando cache;
+- Alt+Left → voltar;
+- Alt+Right → avançar;
+- Ctrl+D → adicionar favorito;
+- Ctrl+F → pesquisar na página;
+- F5 → recarregar;
+- F11 → tela cheia;
+- Esc → parar carregamento.
 
-O Browser 98 possui um sistema simples de favoritos.
+13. Pesquisa dentro da página
 
-Os endereços são armazenados em um arquivo de texto chamado:
+Adicionar uma pequena ferramenta de pesquisa.
 
-"favoritos.txt"
+Ela deve:
 
-Essa abordagem mantém o sistema simples e leve, sem necessidade de banco de dados.
+- procurar texto dentro do "ScrolledText";
+- destacar a ocorrência encontrada;
+- permitir próxima ocorrência;
+- permitir ocorrência anterior;
+- fechar a caixa de pesquisa.
 
----
+Não implementar pesquisa na Internet.
 
-💻 Requisitos
+14. Código e organização
 
-Os requisitos mínimos ainda estão em fase de testes.
+Sem reescrever tudo em C ou mudar a linguagem.
 
-Como estimativa inicial, recomenda-se:
+Dividir gradualmente o código em módulos:
 
-- CPU: processador equivalente a Pentium III ou superior;
-- RAM: 128 MB como mínimo estimado;
-- RAM recomendada: 256 MB ou mais;
-- armazenamento: aproximadamente 50 MB livres, além das dependências;
-- resolução mínima: 640×480;
-- conexão TCP/IP;
-- Python compatível com o código;
-- Tkinter;
-- Pillow.
+browser98/
+├── main.py
+├── ui.py
+├── network.py
+├── html_parser.py
+├── gemini.py
+├── gopher.py
+├── downloads.py
+├── cache.py
+├── history.py
+├── favorites.py
+└── config.py
 
-A compatibilidade específica com sistemas operacionais antigos, incluindo Windows 95, Windows 98 e Windows ME, ainda precisa ser validada oficialmente.
+Manter as funções existentes funcionando durante a migração.
 
-O objetivo futuro do projeto é ampliar a compatibilidade com computadores e sistemas antigos.
+Não criar uma arquitetura excessivamente complexa.
 
----
+15. Tratamento de erros
 
-🚀 Instalação
+Substituir gradualmente os "except:" genéricos por exceções específicas.
 
-Clone o repositório:
+Exibir mensagens úteis para:
 
-git clone https://github.com/ivogeme/Release-oficial-do-Browser-98-Vers-o-Est-vel.git
+- erro DNS;
+- conexão recusada;
+- timeout;
+- erro TLS;
+- URL inválida;
+- arquivo inexistente;
+- erro HTTP;
+- erro de download;
+- erro de imagem.
 
-Entre na pasta:
+Nunca deixar uma falha de uma imagem derrubar a página inteira.
 
-cd Release-oficial-do-Browser-98-Vers-o-Est-vel
+16. Logs
 
-Instale as dependências:
+Criar um sistema simples de log.
 
-pip install -r requirements.txt
+Registrar opcionalmente:
 
-Execute o navegador:
+- URL acessada;
+- protocolo;
+- erros de conexão;
+- downloads;
+- erros do parser.
 
-python browser98.py
+O usuário deve poder desativar os logs.
 
----
+17. Configuração
 
-🧪 Status atual
+Criar um arquivo simples de configuração, por exemplo:
 
-Versão atual: 1.1 Beta
+"config.ini"
 
-O Browser 98 está em desenvolvimento ativo.
+Salvar:
 
-A versão atual é funcional, mas ainda pode apresentar limitações e incompatibilidades com determinados sites e servidores.
+- página inicial;
+- tamanho da fonte;
+- tema;
+- limite do cache;
+- pasta de downloads;
+- preferência de TLS;
+- idioma.
 
-O projeto está sendo desenvolvido gradualmente e novos recursos, correções e otimizações serão adicionados nas próximas versões.
+Não utilizar banco de dados.
 
----
+18. Compatibilidade
 
-⚠️ Problemas conhecidos
+Testar prioritariamente:
 
-Entre as limitações atuais estão:
+- Windows 10;
+- Windows 7;
+- Linux;
+- computadores com pouca RAM.
 
-- suporte limitado a HTML moderno;
-- ausência de JavaScript;
-- suporte limitado a CSS;
-- compatibilidade limitada com sites modernos;
-- validação tradicional de certificados TLS Gemini desativada por motivos de compatibilidade;
-- suporte Gopher ainda em expansão;
-- cache de imagens separado do limite principal de cache;
-- código ainda concentrado em um único arquivo;
-- compatibilidade com sistemas muito antigos ainda não validada oficialmente.
+Manter o projeto leve.
 
-Esses pontos fazem parte do roadmap de desenvolvimento e poderão ser aprimorados em versões futuras.
+Não adicionar dependências pesadas.
 
----
+19. Segurança básica
 
-🗺️ Roadmap
+Adicionar:
 
-Próximas versões
+- validação de URLs;
+- limite de redirecionamentos;
+- limite de tamanho de downloads;
+- confirmação antes de abrir determinados arquivos;
+- aviso para certificados TLS inválidos;
+- tratamento seguro de arquivos locais.
 
-- [ ] Melhorar tratamento de erros;
-- [ ] Melhorar gerenciamento de downloads;
-- [ ] Downloads em blocos para reduzir o consumo de memória;
-- [ ] Melhorar gerenciamento do cache;
-- [ ] Melhorar histórico de navegação;
-- [ ] Melhorar compatibilidade TLS do Gemini;
+Não implementar JavaScript.
+
+Não implementar execução automática de conteúdo.
+
+20. Melhorias de desempenho
+
+Corrigir principalmente:
+
+- operações de rede bloqueando a interface;
+- carregamento de imagens;
+- consumo excessivo de memória;
+- downloads que carregam arquivos inteiros na RAM;
+- crescimento ilimitado de estruturas internas.
+
+Priorizar estabilidade antes de adicionar novos recursos.
+
+21. Documentação da versão 1.2
+
+Atualizar:
+
+- "README.md";
+- changelog;
+- requisitos;
+- instruções de instalação;
+- recursos disponíveis;
+- limitações conhecidas.
+
+Adicionar uma seção:
+
+"O que há de novo no Browser 98 v1.2"
+
+Listando apenas funcionalidades realmente implementadas.
+
+Regra principal
+
+Não transformar a versão 1.2 em uma reescrita completa.
+
+A prioridade deve ser:
+
+1. corrigir problemas existentes;
+2. melhorar estabilidade;
+3. melhorar downloads;
+4. melhorar cache e histórico;
+5. melhorar HTML;
+6. melhorar Gemini/Gopher;
+7. melhorar interface;
+8. organizar o código.
+
+Não implementar ainda:
+
+- abas;
+- JavaScript;
+- CSS completo;
+- engine moderna de navegador;
+- WebAssembly;
+- HTTP/3;
+- sistema complexo de extensões;
+- sincronização em nuvem;
+- dezenas de novos protocolos.
+
+A versão 1.2 deve continuar sendo reconhecivelmente o mesmo Browser 98, apenas mais estável, utilizável e organizado.horar compatibilidade TLS do Gemini;
 - [ ] Expandir suporte ao Gopher;
 - [ ] Melhorar suporte a HTML clássico;
 - [ ] Adicionar configurações do navegador;
