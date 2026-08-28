@@ -1,5 +1,4 @@
 
-
 import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox, simpledialog, filedialog
 from urllib.request import urlopen, Request
@@ -294,9 +293,9 @@ def update_progress(value, show=True):
         try:
             if show:
                 progress_bar.pack(fill=tk.X, padx=2, pady=1)
-                progress_bar["value"] = max(0, min(100, value))
+                progress_bar.start(10)
             else:
-                progress_bar["value"] = 0
+                progress_bar.stop()
                 progress_bar.pack_forget()
         except tk.TclError:
             pass
@@ -311,9 +310,11 @@ def set_busy(busy):
     def _set():
         try:
             if busy:
+                progress_bar.pack(fill=tk.X, padx=2, pady=1)
                 progress_bar.start(10)
             else:
                 progress_bar.stop()
+                progress_bar.pack_forget()
         except tk.TclError:
             pass
     try:
@@ -1012,6 +1013,7 @@ class SimpleHTMLParser(HTMLParser):
         def fetch():
             try:
                 request = Request(url, headers={"User-Agent": "Browser98/1.2"})
+                img_mark = None
                 with urlopen(request, timeout=8) as response:
                     content_length = response.headers.get("Content-Length")
                     if content_length and int(content_length) > MAX_IMAGE_SIZE:
@@ -1024,6 +1026,32 @@ class SimpleHTMLParser(HTMLParser):
                         data.extend(chunk)
                         if len(data) > MAX_IMAGE_SIZE:
                             raise ValueError("Imagem excede o limite de tamanho.")
+                        
+                        try:
+                            img = Image.open(BytesIO(bytes(data)))
+                            img.load()
+                            img.thumbnail((600, 600))
+                            photo_chunk = ImageTk.PhotoImage(img)
+                            
+                            def _update_netscape_style(p=photo_chunk, mark=img_mark):
+                                nonlocal img_mark
+                                try:
+                                    self.widget.configure(state=tk.NORMAL)
+                                    if mark is None:
+                                        self.widget.insert(tk.END, "\n")
+                                        img_mark = self.widget.index(tk.END + "-1c")
+                                        self.widget.image_create(img_mark, image=p)
+                                        self.widget.insert(tk.END, "\n")
+                                    else:
+                                        self.widget.image_configure(mark, image=p)
+                                    self.widget.configure(state=tk.DISABLED)
+                                except tk.TclError:
+                                    pass
+
+                            root.after(0, _update_netscape_style)
+                        except Exception:
+                            pass
+
                 img = Image.open(BytesIO(bytes(data)))
                 img.load()
                 img.thumbnail((600, 600))
@@ -2192,12 +2220,9 @@ def toggle_tls():
 
 
 def settings_dialog():
-    win = tk.Toplevel(root)
-    win.title("Configurações - Browser 98")
-    win.geometry("420x330")
-    win.transient(root)
-
-    frame = ttk.Frame(win, padding=12)
+    new_tab = create_new_tab(title="Configurações")
+    
+    frame = ttk.Frame(new_tab.frame, padding=12)
     frame.pack(fill=tk.BOTH, expand=True)
 
     ttk.Label(frame, text="Página inicial:").pack(anchor="w")
@@ -2242,11 +2267,11 @@ def settings_dialog():
         for tab in tabs:
             tab.apply_theme()
         save_config()
-        win.destroy()
+        close_current_tab()
         update_status("Configurações salvas.")
 
     ttk.Button(frame, text="Salvar", command=apply).pack(pady=8)
-    ttk.Button(frame, text="Cancelar", command=win.destroy).pack()
+    ttk.Button(frame, text="Cancelar", command=close_current_tab).pack()
 
 
 # ============================================================
@@ -2383,6 +2408,10 @@ root.title(f"Browser 98 v{APP_VERSION}")
 root.geometry("760x570")
 root.minsize(520, 350)
 
+style = ttk.Style()
+style.theme_use('default')
+style.configure("XP.Horizontal.TProgressbar", thickness=14, bordercolor="#003399", lightcolor="#0066ff", darkcolor="#002288")
+
 # Keyboard shortcuts
 root.bind("<Control-l>", lambda e: (address_bar.focus_set(), address_bar.select_range(0, tk.END)))
 root.bind("<Control-r>", reload_page)
@@ -2468,24 +2497,27 @@ btn_kwargs = {
 top_container = tk.Frame(root, bg="#d4d0c8")
 top_container.pack(fill=tk.X)
 
-top = tk.Frame(top_container, bg="#d4d0c8", bd=1, relief=tk.RAISED)
-top.pack(fill=tk.X)
+nav_toolbar = tk.Frame(top_container, bg="#d4d0c8", bd=1, relief=tk.RAISED)
+nav_toolbar.pack(fill=tk.X)
 
-tk.Button(top, text="Voltar", command=go_back, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
-tk.Button(top, text="Avançar", command=go_forward, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
-tk.Button(top, text="Parar", command=stop_loading, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
-tk.Button(top, text="Recarregar", command=reload_page, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
-tk.Button(top, text="Início", command=go_home, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
-tk.Button(top, text="+Aba", command=create_new_tab, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
+tk.Button(nav_toolbar, text="Voltar", command=go_back, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
+tk.Button(nav_toolbar, text="Avançar", command=go_forward, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
+tk.Button(nav_toolbar, text="Parar", command=stop_loading, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
+tk.Button(nav_toolbar, text="Recarregar", command=reload_page, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
+tk.Button(nav_toolbar, text="Início", command=go_home, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
+tk.Button(nav_toolbar, text="+Aba", command=create_new_tab, **btn_kwargs).pack(side=tk.LEFT, padx=1, pady=2)
 
-address_bar = tk.Entry(top, font=("Tahoma", 9), bd=2, relief=tk.SUNKEN)
+address_toolbar = tk.Frame(top_container, bg="#d4d0c8", bd=1, relief=tk.RAISED)
+address_toolbar.pack(fill=tk.X)
+
+address_bar = tk.Entry(address_toolbar, font=("Tahoma", 9), bd=2, relief=tk.SUNKEN)
 address_bar.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=3, pady=2)
 address_bar.bind("<Return>", lambda e: load_page())
 
-tk.Button(top, text="Ir", command=load_page, **btn_kwargs).pack(side=tk.RIGHT, padx=1, pady=2)
+tk.Button(address_toolbar, text="Ir", command=load_page, **btn_kwargs).pack(side=tk.RIGHT, padx=1, pady=2)
 
 progress_bar = ttk.Progressbar(
-    top_container, orient="horizontal", mode="determinate", length=100
+    top_container, orient="horizontal", mode="indeterminate", length=100, style="XP.Horizontal.TProgressbar"
 )
 
 notebook = ttk.Notebook(root)
