@@ -1,0 +1,52 @@
+# NeoCOBOL
+
+
+NeoCOBOL 0.4.0
+
+Uma linguagem de programação simples, legível e rigorosa,
+inspirada na filosofia de simplicidade do COBOL e construída
+em Rust.
+
+Estado: desenvolvimento
+
+## Atualmente funciona
+
+- Lexer
+- Parser
+- AST
+- Tipagem forte
+- decimal
+- string
+- boolean
+- variáveis
+- operações matemáticas
+- comparações
+- if / else
+- while
+- display
+- interpolação de strings
+- tratamento de erros
+- execução de arquivos `.neo`
+
+## Exemplo
+
+decimal saldo = 1500.50
+decimal deposito = 500.00
+
+saldo = saldo + deposito
+
+display "Saldo: {saldo}"
+
+## Compilação do projeto
+
+cargo build
+
+## Execução
+
+cargo run -- programa.neolação do projeto
+
+cargo build
+
+## Execução
+
+cargo run -- programa.neo
